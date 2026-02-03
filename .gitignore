@@ -1,0 +1,24 @@
+# Dependencias
+node_modules/
+pnpm-lock.yaml
+
+# Variables de entorno
+.env
+
+# Logs
+*.log
+logs/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# variables de entorno
+.env
+
