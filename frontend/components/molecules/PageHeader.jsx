@@ -1,14 +1,5 @@
 import { Button } from "@/components/atoms";
-import { Plus } from "lucide-react";
 
-/**
- * Header de página con título, descripción y acción principal
- * @param {Object} props
- * @param {string} props.title - Título de la página
- * @param {string} props.description - Descripción de la página
- * @param {Function} props.onAction - Callback para la acción principal
- * @param {string} props.actionLabel - Texto del botón de acción
- */
 export const PageHeader = ({
   title,
   description,
@@ -24,8 +15,7 @@ export const PageHeader = ({
         )}
       </div>
       {onAction && (
-        <Button onClick={onAction} size="lg">
-          <Plus className="mr-2 h-4 w-4" />
+        <Button onClick={onAction} size="lg" className="cursor-pointer">
           {actionLabel}
         </Button>
       )}

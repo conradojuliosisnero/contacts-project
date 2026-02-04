@@ -4,6 +4,7 @@ import dynamic from "next/dynamic";
 import { ContactTable } from "@/components/organisms";
 import { PageHeader } from "@/components/molecules/PageHeader";
 import { useContactosManagement } from "@/hooks/useContactosManagement";
+import { Skeleton } from "../atoms";
 
 export const ContactsPageTemplate = () => {
   const {
@@ -23,7 +24,7 @@ export const ContactsPageTemplate = () => {
   } = useContactosManagement();
 
   return (
-    <div className="container mx-auto py-8 px-4">
+    <div className="w-full max-w-7xl mx-auto py-8 px-4">
       {/* HEADER DE LA PAGINA */}
       <PageHeader
         title="Contactos"
@@ -71,15 +72,16 @@ export const ContactsPageTemplate = () => {
 
 // estos componentes se cargan solo en el cliente, cuando se necesitan
 const DynamicForDialog = dynamic(
-  () =>
-    import("@/components/organisms/ContactFormDialog").then(
-      (mod) => mod.ContactFormDialog,
-    ),
-  { ssr: false },
+  () => import("@/components/organisms/ContactFormDialog"),
+  {
+    ssr: false
+  },
 );
 
 const DynamicSearchInput = dynamic(
-  () =>
-    import("@/components/molecules/SearchInput").then((mod) => mod.SearchInput),
-  { ssr: false },
+  () => import("@/components/molecules/SearchInput"),
+  {
+    loading: () => <Skeleton className="h-10 w-56" />,
+    ssr: false
+  },
 );

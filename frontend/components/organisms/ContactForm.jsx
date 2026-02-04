@@ -5,13 +5,14 @@ import { FormField } from "@/components/molecules";
 import { Button, DialogFooter } from "@/components/atoms";
 import { contactoValidation } from "@/utils/validators";
 
-export const ContactForm = ({
+export default function ContactForm({
   onSubmit,
   initialData,
   onCancel,
   isLoading,
   showActions = true,
-}) => {
+}) {
+  
   const {
     register,
     handleSubmit,
@@ -78,4 +79,4 @@ export const ContactForm = ({
       )}
     </form>
   );
-};
+}

@@ -6,19 +6,30 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  Skeleton,
 } from "@/components/atoms";
-import { ContactForm } from "@/components/organisms";
+import dynamic from "next/dynamic";
 
-export const ContactFormDialog = ({
+
+const DynamicContactForm = dynamic(
+  () => import("@/components/organisms/ContactForm"),
+  {
+    loading: () => <Skeleton className="h-72 w-full" />,
+    ssr: false,
+  }
+);
+
+export default function ContactFormDialog({
   open,
   onOpenChange,
   onSubmit,
   initialData,
   isLoading,
-}) => {
+}) {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
+        {/* HEADER DIALOG  */}
         <DialogHeader>
           <DialogTitle>
             {initialData ? "Editar Contacto" : "Nuevo Contacto"}
@@ -29,13 +40,16 @@ export const ContactFormDialog = ({
               : "Completa el formulario para agregar un nuevo contacto"}
           </DialogDescription>
         </DialogHeader>
-        <ContactForm
+
+        {/* FORMULARIO DE CONTACTO  */}
+        <DynamicContactForm
           onSubmit={onSubmit}
           initialData={initialData}
           isLoading={isLoading}
           showActions={true}
+          onCancel={() => onOpenChange(false)}
         />
       </DialogContent>
     </Dialog>
   );
-};
+}

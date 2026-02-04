@@ -72,6 +72,7 @@ export const ContactTable = ({
                     variant="ghost"
                     onClick={() => onEdit(contacto)}
                     aria-label="Editar contacto"
+                    className="cursor-pointer hover:bg-primary/30"
                   >
                     <Edit className="h-4 w-4" />
                   </Button>
@@ -80,7 +81,7 @@ export const ContactTable = ({
                     variant="ghost"
                     onClick={() => onDelete(contacto.id)}
                     aria-label="Eliminar contacto"
-                    className="text-destructive hover:text-destructive"
+                    className="text-destructive hover:text-destructive hover:bg-destructive/30 cursor-pointer"
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
