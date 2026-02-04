@@ -26,9 +26,9 @@ export const ErrorDisplay = ({
   }
 
   return (
-    <Card className="border-destructive/50">
+    <Card className="border-destructive/50 flex flex-col items-center justify-center">
       <CardHeader>
-        <div className="flex items-center gap-2">
+        <div className="w-100 flex items-center gap-2">
           <XCircle className="h-5 w-5 text-destructive" />
           <CardTitle className="text-destructive">{title}</CardTitle>
         </div>

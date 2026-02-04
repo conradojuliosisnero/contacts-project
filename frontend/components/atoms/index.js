@@ -21,3 +21,13 @@ export {
 } from "./dialog";
 export { Skeleton } from "./skeleton";
 export { Toaster } from "./sonner";
+export {
+  Table,
+  TableHeader,
+  TableBody,
+  TableFooter,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableCaption,
+} from "./table";

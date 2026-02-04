@@ -1,101 +1,54 @@
 "use client";
 
-import { useState } from "react";
-import { ContactFormDialog, ContactList } from "@/components/organisms";
-import { Button } from "@/components/atoms";
-import { useContactos } from "@/hooks/useContactos";
-import { Plus } from "lucide-react";
-import { toast } from "sonner";
+import dynamic from "next/dynamic";
+import { ContactTable } from "@/components/organisms";
+import { PageHeader } from "@/components/molecules/PageHeader";
+import { useContactosManagement } from "@/hooks/useContactosManagement";
 
 export const ContactsPageTemplate = () => {
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingContact, setEditingContact] = useState(null);
   const {
-    contactos,
+    dialogOpen,
+    editingContact,
+    searchTerm,
+    filteredContactos,
     loading,
     error,
-    createContacto,
-    updateContacto,
-    deleteContacto,
+    handleSubmit,
+    handleEdit,
+    handleDelete,
+    handleOpenChange,
+    handleNewContact,
+    handleSearchChange,
     fetchContactos,
-  } = useContactos();
-
-  const handleSubmit = async (data) => {
-    if (editingContact) {
-      const result = await updateContacto(editingContact.id, data);
-      if (result.success) {
-        toast.success("Contacto actualizado", {
-          description: `${data.nombre} ha sido actualizado correctamente.`,
-        });
-        setEditingContact(null);
-        setDialogOpen(false);
-      } else {
-        toast.error("Error al actualizar", {
-          description: result.error || "No se pudo actualizar el contacto.",
-        });
-      }
-    } else {
-      const result = await createContacto(data);
-      if (result.success) {
-        toast.success("Contacto creado", {
-          description: `${data.nombre} ha sido agregado a tus contactos.`,
-        });
-        setDialogOpen(false);
-      } else {
-        toast.error("Error al crear", {
-          description: result.error || "No se pudo crear el contacto.",
-        });
-      }
-    }
-  };
-
-  const handleEdit = (contacto) => {
-    setEditingContact(contacto);
-    setDialogOpen(true);
-  };
-
-  const handleDelete = async (id) => {
-    const contacto = contactos.find((c) => c.id === id);
-
-    toast.promise(deleteContacto(id), {
-      loading: "Eliminando contacto...",
-      success: () => {
-        return `${contacto?.nombre || "Contacto"} ha sido eliminado.`;
-      },
-      error: (err) => {
-        return err?.error || "No se pudo eliminar el contacto.";
-      },
-    });
-  };
-
-  const handleOpenChange = (open) => {
-    setDialogOpen(open);
-    if (!open) {
-      setEditingContact(null);
-    }
-  };
-
-  const handleNewContact = () => {
-    setEditingContact(null);
-    setDialogOpen(true);
-  };
+  } = useContactosManagement();
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <div className="flex justify-between items-center mb-8">
-        <div>
-          <h1 className="text-4xl font-bold">Contactos</h1>
-          <p className="text-muted-foreground mt-2">
-            Gestiona tu lista de contactos
+      {/* HEADER DE LA PAGINA */}
+      <PageHeader
+        title="Contactos"
+        description="Gestiona tu lista de contactos"
+        onAction={handleNewContact}
+        actionLabel="Nuevo Contacto"
+      />
+
+      {/* BARRA DE BUSQUEDA */}
+      <div className="mb-6">
+        <DynamicSearchInput
+          value={searchTerm}
+          onChange={handleSearchChange}
+          placeholder="Buscar por nombre..."
+          className="max-w-md"
+        />
+        {searchTerm && (
+          <p className="text-sm text-muted-foreground mt-2">
+            {filteredContactos.length} contacto(s) encontrado(s)
           </p>
-        </div>
-        <Button onClick={handleNewContact} size="lg">
-          <Plus className="mr-2 h-4 w-4" />
-          Nuevo Contacto
-        </Button>
+        )}
       </div>
 
-      <ContactFormDialog
+      {/* FORM DINAMICO TIPO POP-UP  */}
+      <DynamicForDialog
         open={dialogOpen}
         onOpenChange={handleOpenChange}
         onSubmit={handleSubmit}
@@ -103,9 +56,10 @@ export const ContactsPageTemplate = () => {
         isLoading={loading}
       />
 
-      <ContactList
-        contactos={contactos}
-        loading={loading && contactos.length === 0}
+      {/* TABLA DE CONTACTOS */}
+      <ContactTable
+        contactos={filteredContactos}
+        loading={loading && filteredContactos.length === 0}
         error={error}
         onEdit={handleEdit}
         onDelete={handleDelete}
@@ -114,3 +68,18 @@ export const ContactsPageTemplate = () => {
     </div>
   );
 };
+
+// estos componentes se cargan solo en el cliente, cuando se necesitan
+const DynamicForDialog = dynamic(
+  () =>
+    import("@/components/organisms/ContactFormDialog").then(
+      (mod) => mod.ContactFormDialog,
+    ),
+  { ssr: false },
+);
+
+const DynamicSearchInput = dynamic(
+  () =>
+    import("@/components/molecules/SearchInput").then((mod) => mod.SearchInput),
+  { ssr: false },
+);
