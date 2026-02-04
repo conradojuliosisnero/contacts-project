@@ -1,4 +1,10 @@
 import axiosInstance from "@/lib/axios";
+import {
+  mapContactoFromApi,
+  mapContactosFromApi,
+  mapContactoToApi,
+  extractApiData,
+} from "@/utils/mappers";
 
 const CONTACTOS_ENDPOINT = "/contactos";
 
@@ -6,28 +12,34 @@ export const contactosService = {
   // Obtener todos los contactos
   getAll: async () => {
     const response = await axiosInstance.get(CONTACTOS_ENDPOINT);
-    return response.data;
+    const data = extractApiData(response.data);
+    return mapContactosFromApi(data);
   },
 
   // Obtener un contacto por ID
   getById: async (id) => {
     const response = await axiosInstance.get(`${CONTACTOS_ENDPOINT}/${id}`);
-    return response.data;
+    const data = extractApiData(response.data);
+    return mapContactoFromApi(data);
   },
 
   // Crear un nuevo contacto
   create: async (contacto) => {
-    const response = await axiosInstance.post(CONTACTOS_ENDPOINT, contacto);
-    return response.data;
+    const payload = mapContactoToApi(contacto);
+    const response = await axiosInstance.post(CONTACTOS_ENDPOINT, payload);
+    const data = extractApiData(response.data);
+    return mapContactoFromApi(data);
   },
 
   // Actualizar un contacto
   update: async (id, contacto) => {
+    const payload = mapContactoToApi(contacto);
     const response = await axiosInstance.put(
       `${CONTACTOS_ENDPOINT}/${id}`,
-      contacto,
+      payload,
     );
-    return response.data;
+    const data = extractApiData(response.data);
+    return mapContactoFromApi(data);
   },
 
   // Eliminar un contacto

@@ -12,6 +12,10 @@ export const sequelize = new Sequelize(
     port: process.env.DB_PORT || 5432,
     dialect: "postgres",
     logging: process.env.NODE_ENV === "development" ? console.log : false,
+    dialectOptions: {
+      ssl: false,
+      connectTimeout: 5000,
+    },
     pool: {
       max: 5,
       min: 0,

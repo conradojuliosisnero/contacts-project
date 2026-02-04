@@ -1,7 +1,9 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import swaggerUi from "swagger-ui-express";
 import { sequelize } from "./src/config/database.js";
+import { swaggerSpec } from "./src/config/swagger.js";
 import contactosRoutes from "./src/routes/contactos.routes.js";
 
 // Cargar variables de entorno
@@ -15,6 +17,22 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Documentación Swagger
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerSpec, {
+    customCss: ".swagger-ui .topbar { display: none }",
+    customSiteTitle: "API Contactos - Documentación",
+  }),
+);
+
+// Swagger JSON
+app.get("/api-docs.json", (req, res) => {
+  res.setHeader("Content-Type", "application/json");
+  res.send(swaggerSpec);
+});
+
 // Rutas
 app.use("/contactos", contactosRoutes);
 
@@ -23,6 +41,7 @@ app.get("/", (req, res) => {
   res.json({
     message: "API de Contactos",
     version: "1.0.0",
+    documentation: `http://localhost:${PORT}/api-docs`,
     endpoints: {
       getContactos: "GET /contactos",
       createContacto: "POST /contactos",

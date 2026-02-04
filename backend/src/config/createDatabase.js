@@ -11,7 +11,9 @@ const createDatabase = async () => {
     port: process.env.DB_PORT || 5432,
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: "postgres", // Conectar a la base de datos por defecto
+    database: "postgres", 
+    ssl: false,
+    connectionTimeoutMillis: 5000,
   });
 
   try {

@@ -101,4 +101,58 @@ export const contactosController = {
       handleError(res, error);
     }
   },
+
+  // GET /contactos/:id - Obtener un contacto por ID
+  getById: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const contacto = await Contacto.findByPk(id);
+
+      if (!contacto) {
+        return res.status(404).json({
+          error: RESPONSE_MESSAGES.ERROR_NO_ENCONTRADO,
+          mensaje: RESPONSE_MESSAGES.CONTACTO_NO_ENCONTRADO(id),
+        });
+      }
+
+      res.json({
+        success: true,
+        data: contacto,
+      });
+    } catch (error) {
+      handleError(res, error);
+    }
+  },
+
+  // PUT /contactos/:id - Actualizar un contacto
+  update: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { nombre, email, telefono } = req.body;
+
+      const contacto = await Contacto.findByPk(id);
+
+      if (!contacto) {
+        return res.status(404).json({
+          error: RESPONSE_MESSAGES.ERROR_NO_ENCONTRADO,
+          mensaje: RESPONSE_MESSAGES.CONTACTO_NO_ENCONTRADO(id),
+        });
+      }
+
+      await contacto.update({
+        nombre: nombre?.trim(),
+        email: email?.trim().toLowerCase(),
+        telefono: telefono?.trim() || null,
+      });
+
+      res.json({
+        success: true,
+        mensaje: RESPONSE_MESSAGES.CONTACTO_ACTUALIZADO,
+        data: contacto,
+      });
+    } catch (error) {
+      handleError(res, error);
+    }
+  },
 };
