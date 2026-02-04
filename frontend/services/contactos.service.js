@@ -5,8 +5,10 @@ import {
   mapContactoToApi,
   extractApiData,
 } from "@/utils/mappers";
+import { endpoints } from "@/config/config";
 
-const CONTACTOS_ENDPOINT = "/contactos";
+const { CONTACTOS_ENDPOINT } = endpoints;
+
 
 export const contactosService = {
   // Obtener todos los contactos

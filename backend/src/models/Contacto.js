@@ -1,10 +1,10 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
+import { REGEX_PATTERNS } from "../constants/regex.js";
 import {
   VALIDATION_MESSAGES,
   VALIDATION_LIMITS,
 } from "../constants/messages.js";
-import { REGEX_PATTERNS } from "../constants/regex.js";
 
 const Contacto = sequelize.define(
   "Contacto",
