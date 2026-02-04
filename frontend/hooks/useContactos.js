@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import { contactosService } from "@/services/contactos.service";
+import { contactosService } from "@/services/contactos";
 import { extractApiError } from "@/utils/mappers";
 
 export const useContactos = () => {
